@@ -12,7 +12,7 @@
 
 \course{CS181-s23}
 \assignment{Homework \#0}
-\duedate{This is a test, 2023 at 11:59 PM\\ (with free, no-questions-asked extension, see below)}
+\duedate{January 26, 2023 at 11:59 PM\\ (with free, no-questions-asked extension, see below)}
 
 \usepackage{comment}
 \usepackage{url}
@@ -20,6 +20,35 @@
 \usepackage{listings}
 \usepackage[shortlabels]{enumitem}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
 
 \theoremstyle{definition}
 \newtheorem{defn}{Definition}[section]
@@ -95,7 +124,81 @@ In this class we will be exploring the question of ``how do we model the trend i
 \end{enumerate}
     
 \end{problem}
+\pagebreak
 
+\noindent \textbf{Solution to Problem 1:}
+
+% Solution for Q1
+\begin{enumerate}
+\item 
+    We can write a system of equations below using our dataset:
+        \begin{align}
+            y_1 &= w_0 + w_1x_1\\
+            y_2 &= w_0 + w_1x_2
+        \end{align}
+        
+    Subtracting both equations, we have:
+        \begin{align*}
+            y_2 - y_1 &= w_1(x_2 - x_1)\\
+            w_1 &= \frac{y_2 - y_1}{x_2 - x_1}
+        \end{align*}
+        
+    Subbing $w_1$ into (1), we have:
+        \begin{align*}
+            w_0 &= y_1 - \frac{y_2 - y_1}{x_2 - x_1} x_2\\
+            &= \frac{x_2y_1 - x_1y_2}{x_2 - x_1}
+        \end{align*}
+
+\item
+    We can write the above system of linear equations as $\pmb{y} = \bf{Xw}$, where $\pmb{y} = 
+    \begin{bmatrix}
+        y_1\\
+        y_2
+    \end{bmatrix}$,
+    $\bf{X} =
+    \begin{bmatrix}
+        1 & x_1\\
+        1 & x_2
+    \end{bmatrix}$
+    and $\pmb{w}=
+    \begin{bmatrix}
+        w_1\\
+        w_2
+    \end{bmatrix}$.
+    The first column in $\bf{X}$ consists of 1's, since $w_0$ is a constant in both of the equations.
+
+\item
+    For there to be a unique solution for $\bf{w}$, $\bf{X}$ has to be invertible (i.e. it's determinant must be zero.) This is only true when the elements in the data set are different (when $x_1, x_2$ are unique.) When this solution exists:
+    \begin{equation*}
+        \bf{w} = \bf{X^{-1}y}
+    \end{equation*}
+
+\item
+    We know that $\bf{X^{-1}} = \frac{1}{x_2 - x_1}\begin{bmatrix}
+        x_2 &   -x_1\\
+        -1  &   1 
+    \end{bmatrix}$. Thus, we have:
+    \begin{align*}
+       \bf{w} &= \frac{1}{x_2 - x_1}\begin{bmatrix}
+        x_2 &   -x_1\\
+        -1  &   1 
+    \end{bmatrix}\begin{bmatrix}
+        y_1\\
+        y_2
+    \end{bmatrix}\\
+    &= \frac{1}{x_2 - x_1}\begin{bmatrix}
+        x_2y_1 - x_1y_2\\
+        y_2 - y_1
+    \end{bmatrix}
+    \end{align*}
+    We can see that this aligns with our solutions above. Using matrix notation can prove useful because it helps us simplify the problem, and generalize the solution. It's also easier to scale the problem if there are more dimensions.
+
+\item
+    Our analytical expression only works when the data is collinear.
+\end{enumerate}
+
+
+\pagebreak
 \begin{problem}[Optimizing Objectives - Calculus Review]
 In this class, we will write real-life goals we want our model to achieve into a mathematical expression and then find the optimal settings of the model that achieves these goals. The formal framework we will employ is that of mathematical optimization. Although the mathematics of optimization can be quite complex and deep, we have all encountered basic optimization problems in our first calculus class!\\
 
@@ -122,14 +225,48 @@ $$y = f(x_1, x_2) = \exp\left(-(x_1 - 2)^2 - (x_2 - 1)^2 \right)$$
 \end{enumerate}
 
 \end{problem}
+\pagebreak
 
+\textbf{Solution for Problem 2}
+\begin{enumerate}
+\item 
+    Based on the given formula, the plant does have a maximum height and thus Nari's goal is achievable. This can be seen visually if you plot the function, which is a downward-facing parabola (i.e. it is concave), and as can be seen from the shape, it is increasing as we approach from negative x-axis and positive x-axis, until a maximum point is reached at the 'peak' of the parabola.
+
+\item
+    We can solve for the derivative of $y$ at zero:
+    \begin{align*}
+        \frac{dy}{dx} &= -6x + 72 = 0\\
+        x &= 12
+    \end{align*}
+    Plugging this into $y$:
+    \begin{equation*}
+        y = -3(12)^2 + 72(12) + 70 = 502
+    \end{equation*}
+    We can use the second derivative test to find the nature of the critical point:
+    \begin{equation*}
+        \frac{dy^2}{d^2x} = -6 < 0
+    \end{equation*}
+    Thus, we can see that our critical point is at a local max. Since the shape of the function is concave-down, the function only decreases, and so we know that $502$ is our global maximum.
+
+\item
+    Below is the visualization of the function:\\
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.5]{images/q-2-3.png}
+        \caption{Surface}
+        \label{fig:q-2-3}
+    \end{figure}\\
+    We can see that there is one global maximum on the domain given--the peak of the surface. Thus, there is a unique solution to Nari's optimization problem.
+\end{enumerate}
+
+\pagebreak
 \begin{problem}[Reasoning about Randomness - Probability and Statistics Review]
 In this class, one of our main focuses is to model the unexpected variations in real-life phenomena using the formalism of random variables. In this problem, we will use random variables to model how much time it takes an USPS package processing system to process packages that arrive in a day.\\
 
 \noindent \textbf{Learning Goals:} In this problem, you will analyze random variables and their distributions both analytically and computationally. You will also practice drawing connections between said analytical and computational conclusions.\\
 
 \noindent Consider the following model for packages arriving at the US Postal Service (USPS):
-\begin{itemize}
+\begin{itemize}                            
     \item Packages arrive randomly in any given hour according to a Poisson distribution. That is, the number of packages in a given hour $N$ is distributed $Pois(\lambda)$, with $\lambda = 3$.
     \item Each package has a random size $S$ (measured in $in^3$) and weight $W$ (measured in pounds), with joint distribution
     $$(S, W)^{T} \sim \mathcal{N}\left( \boldsymbol{\mu}, \boldsymbol{\Sigma}\right) \text{, with } \boldsymbol{\mu} = \begin{bmatrix} 120 \\ 4 \end{bmatrix} \text{ and } \boldsymbol{\Sigma} = \begin{bmatrix} 1.5 & 1 \\ 1 & 1.5 \end{bmatrix}.$$
@@ -152,4 +289,54 @@ For this problem, you may find the \texttt{multivariate\_normal} module from \te
     \end{enumerate}
 \end{enumerate}
 \end{problem}
+\pagebreak
+
+\textbf{Solution to Problem 3}
+\begin{enumerate}
+\item
+    We can see below that for Weight, the bar with the highest count is at around 4, while the highest for Size is at around 120. These would be the most likely values of weight and size of a package. This aligns with the theoretical expected size and expected weight of a package, according to the means of the RVs that we started with.\\
+    \begin{figure}[h]
+        \centering
+        \includegraphics{images/q-3-1.png}
+        \caption{Bivariate histogram visualizing the S \& W samples generated from joint distribution of S,W}
+        \label{fig:q-3-1}
+    \end{figure}
+    \pagebreak
+\item
+    From the scatter plot below, we can see that S and W are positively correlated, since for set intervals of W, as we increase S, W is more likely to take on larger values (we can see that from how the orange graph at $S=122$ is the blue graph shifted to the right.\\
+    \begin{figure}[h]
+        \centering
+        \includegraphics{images/q-3-2.png}
+        \caption{Scatter Plot of W against BVG PDF, W fixed at 2 values}
+        \label{fig:q-3-2}
+    \end{figure}\\
+
+\item
+    It is a good distribution, because if we take enough random samples of S and W, they will converge to a normal distribution (by the Central Limit theorem.) However, it may not be a good distribution in cases where there's a large influx of a certain type of purchase (such as on Black Friday, or during covid, when there was a lot more purchases of masks than usual,) since the Gaussian distribution doesn't account for extreme exceptions.
+
+\item
+    From linearity of expectation, we know that:
+    \begin{align*}
+        E(T)    &= 60 + 0.6E(W) + 0.2E(S) + E(\epsilon)\\
+                &= 60 + 0.6(4) + 0.2(120) + 0\\
+                &= 86.4
+    \end{align*}
+    We also know that $\var(X_1 + \cdots + X_n) = \sum_{i=1}^{n} \var(X_i) + 2\sum_{i<j} \cov(X_i, X_j)$. Thus, we have:
+    \begin{align*}
+        &\var(60 + 0.6W + 0.2S + \epsilon)\\
+        &= 0.6^2\var(W) + 0.2^2\var(S) + \var(\epsilon) + 2\cdot0.6\cdot0.2\cdot\cov(W,S)
+    \end{align*}
+    Using the covariance matrix provided in the description of the joint distribution, we have:
+    \begin{align*}
+        &= 0.6^2\cdot1.5 + 0.2^2\cdot1.5 + 5 + 0.24\cdot1\\
+        &= 5.84
+    \end{align*}
+
+\item
+    The below code snippet simulates 1000 draws from the T* distribution:
+    \lstinputlisting[language=Python]{prob3-3.py}
+    Mean: $6209.50$\\
+    Standard deviation: $718.65$
+\end{enumerate}
+
 \end{document}
