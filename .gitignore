@@ -6,3 +6,12 @@
 *.log
 *.out
 *.synctex.gz
+
+# random mac file
+.DS_Store
+
+# ignore python venv files and folders
+pyvenv.cfg
+bin
+lib
+share
