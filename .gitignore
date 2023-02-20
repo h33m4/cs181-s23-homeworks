@@ -8,3 +8,9 @@
 *.log
 *.out
 *.synctex.gz
+
+# ignore python venv files and folders
+pyvenv.cfg
+bin
+lib
+share
