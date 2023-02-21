@@ -14,3 +14,5 @@ pyvenv.cfg
 bin
 lib
 share
+
+dump.ipynb
