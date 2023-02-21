@@ -26,6 +26,7 @@
 \usepackage{comment}
 \usepackage{url}
 \usepackage{xcolor}
+\usepackage{mdframed}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -200,7 +201,7 @@ What is the time complexity of your implementation, when computing your model on
     Below, we see our model for different values of $\tau$.
     \begin{figure}[h]
         \centering
-        \includegraphics[scale=0.5]{images/p1.1.png}
+        \includegraphics[scale=0.75]{images/p1.1.png}
         \caption{Surface}
         \label{fig:q-2-3}
     \end{figure}
@@ -279,12 +280,29 @@ What is the time complexity of your implementation, when computing your model on
 \end{problem}
 
 \newpage
-
+ 
 {\bf Solution 2: Kernels and kNN}
 
 \begin{enumerate}
 \item
-    
+    Below is the plot of the results for each $k$:
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.75]{hw1/images/p2.1.png}
+        \caption{Plot of kNN models}
+        \label{fig:p2.1}
+    \end{figure}
+
+\item
+    We see that for $k=1$, the plot over-fits, going through every single data point and highly fitting the noise. This is most similar to the plot of $\tau=1$. For plot $k=3$, it reflects the trend in the data without over-fitting or under-fitting. This is most similar to the plot of $\tau=50$. For $k=N-1$, the plot underfits the data--it is almost a straight line, and reflects no trend. This is most similar to the plot of $\tau=2500$. It seems that they interpolate similarly when the choice of kernel function for a Kernel-based regression is one that decays as the distance between two points increases, since that more dramatically reduces the effects of points the further away they are from a given $x'$, and highly prioritizing points that are closer, which has a similar effect to only counting the closest points.
+
+\item
+    I would choose the kNN model with $k=3$, since the other 2 are clearly not appropriate models (either dramatically over-fitting or under-fitting), and out of the 3 of them, $k=3$ best reflects the trend. Its mean squared error is $3.8907662222222212$.
+
+\item
+    They would need to know the distance function, and they would need to have the same training data I used, which means the space complexity of the model is $O(N)$.
+
+    For a given data point, the time complexity is $O(N)$ for calculating the distance between it and every training point (stored in an array), then $O(N\log N)$ for sorting the indices of the array by order of the values in the array (using numpy's argsort() function, which uses a quicksory algorithm) and then $O(k)$ for iterating through the resulting $k$ closest neighbours and finding their average. Thus, the final time complexity for a given data point is $O(N + N\log N + k) = O(N\log N)$.
 \end{enumerate}
 
 \newpage
@@ -357,7 +375,6 @@ in your writeup for 4.1 are these four plots.}
 \end{enumerate}
 \end{problem}
 
-
 \newpage
 \begin{framed}
 \noindent\textbf{Problem 3} (cont.)\\
@@ -414,6 +431,22 @@ of the target $\mathbf{y}$ to be different; in these cases the
 MSE can no longer be directly compared.
 
 \end{framed}
+
+\newpage
+
+{\bf Solution 3: Modeling Climate Change 800,000 Years Ago}
+
+\begin{enumerate}
+\item
+    Below are the 4 plots:
+    \begin{figure}
+        \centering
+        \includegraphics{}
+        \caption{Caption}
+        \label{fig:my_label}
+    \end{figure}
+\end{enumerate}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
