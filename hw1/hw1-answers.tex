@@ -194,17 +194,39 @@ What is the time complexity of your implementation, when computing your model on
 
 \newpage
 
-{\bf Solution to Problem 1:}
-
+{\bf Solution 1: Optimizing a Kernel}
 \begin{enumerate}
 \item 
+    Below, we see our model for different values of $\tau$.
     \begin{figure}[h]
         \centering
         \includegraphics[scale=0.5]{images/p1.1.png}
         \caption{Surface}
         \label{fig:q-2-3}
-    \end{figure}\\
-    Above, we see our model for different values of $\tau$.
+    \end{figure}
+    We can see that the model with $\tau = 1$ has a lot of variance, and it over-fits the data, exactly going through all of the points in the training data. The model with $\tau = 2500$ has much less variance, staying within a relatively narrow interval, and with gradual increases and decreases--it looks like it under-fits the data, since it doesn't really reflect the trend in the training data. The model with $\tau = 50$ has a lot of variance, but less than $\tau = 1$, and it seems to capture the trend better than the other models values of $\tau$--this is the model that I would choose.
+
+\item
+    As $\tau$ approaches zero: when $x \neq x'$, we have that $K_\tau(x, x')$ approaches zero (since the exponent approaches $-\infty$, and $exp(-\infty) = 0$; when $x = x'$, $K_\tau(x, x')$ approaches $1$. Thus, choosing the optimal value of $\tau$ will result in our model over-fitting our model, since the model would output the true value $y_n$ when $x'$ is $x_n$, and would be undefined for every other $x'$. 
+
+\item
+    Our MSE over the test set is as follows:
+    \begin{align}
+        MSE &= \frac{1}{M} \sum_{m=1}^M \left(y'_m - \textbf{predictions}_m \right)^2\\
+        &= \frac{1}{M} \sum_{m=1}^M\left(y'_m - \frac{\sum_n K_\tau(x_n, x'_m) y_n}{\sum_n K_\tau(x_n, x'_m)} \right)^2
+    \end{align}
+
+\item
+    Our results are as follows:
+    \begin{itemize}
+        \item $\tau$ = 1: loss = 1.9472621565209178
+        \item $\tau$ = 50: loss = 1.8582899169613452
+        \item $\tau$ = 2500: loss = 8.333886806980793
+    \end{itemize}
+    We can see that the model with $\tau = 50$ has the lowest MSE, followed closely by $\tau=1$, and $\tau = 2500$ has a much higher MSE. This checks out with our answer in part 1.
+
+\item
+    They would need to have the function, and the same training data as me (and assuming they want to make the exact same predictions as me, they'd need the same test data, too.) Storing this information has space complexity of $O(N)$, since a training set of size $N$ stores $N$ pairs $x,y$, and $O(2N) = O(N)$. To compute the model on a new datapoint, you'd have to run it through $f_\tau$, which iterates through every point in the training set, and so has a time complexity of $O(N)$.
 \end{enumerate}
 
 \newpage
@@ -255,6 +277,17 @@ What is the time complexity of your implementation, when computing your model on
 \end{enumerate}
 
 \end{problem}
+
+\newpage
+
+{\bf Solution 2: Kernels and kNN}
+
+\begin{enumerate}
+\item
+    
+\end{enumerate}
+
+\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 3
