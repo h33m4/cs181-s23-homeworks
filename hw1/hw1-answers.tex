@@ -434,17 +434,55 @@ MSE can no longer be directly compared.
 
 \newpage
 
-{\bf Solution 3: Modeling Climate Change 800,000 Years Ago}
+\textbf{Solution 3: Modeling Climate Change 800,000 Years Ago}
 
 \begin{enumerate}
 \item
     Below are the 4 plots:
-    \begin{figure}
+    \begin{figure}[h]
         \centering
-        \includegraphics{}
-        \caption{Caption}
+        \includegraphics[scale=0.47]{hw1/images/p3.1.png}
+        \caption{OLS regression plots for 4 different $\phi(\textbf{X})$}
         \label{fig:my_label}
     \end{figure}
+
+\item
+    The results are copied from the code and pasted below:\\
+
+    \begin{enumerate}[a]
+    \item 
+    Train MSE: 4.83; Test MSE: 7.96
+    
+    Train Negative Log-Likelihood: 125.768; Test Negative Log-Likelihood: 63.256
+
+    This fits the data well, as it follows a general trend without following the noise. The test and train MSE values are close in value, as are the train and test NLL values.
+    
+    \item
+    Train MSE: 5.53; Test MSE: 8.71
+    
+    Train Negative Log-Likelihood: 129.620; Test Negative Log-Likelihood: 64.035
+    
+    This fits the data well, as it follows a general trend without following the noise. The test and train MSE values are close in value, as are the train and test NLL values.
+    
+    \item
+    Train MSE: 2.88; Test MSE: 5.97
+    
+    Train Negative Log-Likelihood: 111.018; Test Negative Log-Likelihood: 62.098
+
+    This fits the data well, as it follows a general trend without following the noise. The test and train MSE values are close in value, as are the train and test NLL values.
+    
+    \item
+    Train MSE: 0.64; Test MSE: 58.90
+    
+    Train Negative Log-Likelihood: 68.303; Test Negative Log-Likelihood: 1162.188
+
+    This overfits the data, as we can see that it goes through practically every data point in the plot. The test and train MSE values are also very different in value, as are the train and test NLL values, with both MSE and NLL dramatically higher for the test data than the train data.
+    \end{enumerate}
+
+\item
+    This time round, we don't need to share the entire training set with them, since it's only needed to calculate the weights (which we've already fitted.) However, the weights were calculated using transformed data with a specific base, so that would have to be shared. This would have a space complexity of $O(N \cdot D)$, since the basis would be an array of size $N \times D$.
+
+    Calculating the predicted value for an arbitrary datapoint, given the weights and the basis, involves a dot product between the basis array, of size $N \times D$, and $\textbf{w}^T$ of size $D$, and so this has a time complexity of $O(N)$.
 \end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -479,15 +517,68 @@ This question is a conceptual question, and you are not required to implement th
 \end{problem}
 
 \newpage
+
+\textbf{Solution 4: Impact question}
+
+\begin{enumerate}
+\item 
+    I would choose annual US energy consumption as the target variable, since that's what we are trying to explore. This is measured in KiloWatt Hours.
+
+\item
+    Considering the things that the US president is concerned about, 5 possible features we could use are: 
+    \begin{itemize}
+        \item 
+        US population. My assumption here is that there is a positive correlation between the population size and energy consumption.
+
+        \item
+        Energy prices. This refers to how much individuals pay for electricity annually, and my assumption is that the more people have to pay, the more energy is being consumed.
+
+        \item
+        Global levels of CO2. This is a big indicator of climate change, and although it is usually a feature that is affected by consumption of energy, it may also have an effect on the consumption of energy.
+
+        \item
+        Electric vehicles owned. Climate change is commonly attributed to the usage of petrol/diesel powered vehicles. This is one of the aspects that the president was concerned about, and my assumption is that electric vehicles require less energy consumption. 
+
+        \item
+        Number of companies that adopted eco-friendly practices. My assumption is that eco-friendly practices reduce the consumption of electricity, and so there is a relationship between how much energy is used and how many companies are adopting these practices. 
+        
+    \end{itemize}
+
+\item
+    I would use data from 1990 to present, as the Third Industrial Revolution kicks off. This is I wouldn't want to include data that was before the main sources of energy consumption became consistent. In addition, I think data from 1990 is more likely to be reliable, with less noise. All in all, it's not dataset that's too large, but big enough to show a trend, if there is one.
+
+\item
+    MSE
+
+\item
+    The president could potentially decide on implementing policies that led to improving incentives for companies to implement eco-friendly practices.
+
+\item
+    He could be concerned that:
+    \begin{itemize}
+        \item
+        the data might not accurately reflect the effect of the features on the target variable–for example, the impact of a given company adopting eco-friendly on US energy consumption probably varies depending on how big the company is
+        
+        \item 
+        the model's features are limited (with not enough focus on the international relationships and current affairs.)
+    \end{itemize}
+
+\item
+    It could lead to misinformed policy decisions that lead to unintended consequences–for example, missing features such as investments in renewable energy could lead to the US not keeping up with the rest of the world in global energy usage.
+\end{enumerate}
+
+
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Name and Calibration
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Name}
+Adam Mohamed
 
 \subsection*{Collaborators and Resources}
-Whom did you work with, and did you use any resources beyond cs181-textbook and your notes?
+I worked mostly myself, and collaborated on some of the questions with Evan Jiang and Taj Gulati.
 
 \subsection*{Calibration}
-Approximately how long did this homework take you to complete (in hours)? 
+This homework took about 15 hours to complete.
 
 \end{document}
