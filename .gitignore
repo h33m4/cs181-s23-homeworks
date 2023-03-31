@@ -1,3 +1,5 @@
+# Mac Rubbish
+.DS_Store
 
 # TeX Compilier Log
 *.aux
@@ -6,9 +8,6 @@
 *.log
 *.out
 *.synctex.gz
-
-# random mac file
-.DS_Store
 
 # ignore python venv files and folders
 pyvenv.cfg
