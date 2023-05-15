@@ -7,7 +7,9 @@
 
 \usepackage[OT1]{fontenc}
 \usepackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
-\usepackage[pdftex]{graphicx}
+\usepackage{float}
+\usepackage[caption = false]{subfig}
+\usepackage[final]{graphicx}
 \usepackage{subfig}
 \usepackage{fullpage}
 \usepackage{amsmath}
@@ -129,6 +131,44 @@ Repeat this process (reporting the first model's classification probability and 
 \end{problem}
  \let\cleardoublepage\clearpage
 
+\newpage
+
+\textbf{Solution 1:}
+
+\begin{enumerate}
+\item See code in jupyter notebook.
+\item See the plots below:
+
+\begin{figure}[h]
+\subfloat[fig 1]{\includegraphics[width = 3in]{hw2/basis1.png}} 
+\subfloat[fig 2]{\includegraphics[width = 3in]{hw2/basis2.png}}\\
+\subfloat[fig 3]{\includegraphics[width = 3in]{hw2/basis3.png}} 
+\caption{Plots of different bases}
+\label{fig:figure}
+\end{figure}
+
+
+For the first basis, the model under-fits the data, showing high bias and low variance (with transformed input matrix of only $nx2$) and completely misses the mark with the true process (all of the individual prediction functions are straight lines.) 
+
+The second basis fits the data, more closely approximating the true process, with low bias and low variance – the mean of the individual prediction function captures the trend more generally (you can see in the graph that some of the individual ones fit better than others, depending on what part of the data-set they were trained on.) 
+
+The third basis shows a model that clearly overfits the data (low bias, high variance). Despite being a better fit than basis one, we can see that each individual prediction function grossly overfits to the datapoints, and the mean of the prediction functions reflects that with its sudden variations.
+
+
+\item Intuitively, the model would be more generalizable since there would be more data for the model to train on, and so variance would decrease. Bias 'measures the difference between the true function and our estimate $f_{\hat{w}}$ averaged over all samples of training sets' [from lecture video] and so it would be unaffected by the size of the data set.
+
+\item Observation prob @ $t=0.1$ $\approx 0.5198$.\\
+Variance of the classification probability over 10 models $\approx 0.0038$\\
+The observation probability tells us that we can be about $50\%$ sure that we'll observe the planet. The variance tells us how much this probability varies across the 10 different models. Since it's very low, we can be fairly certain of this probability.
+
+Observation prob @ $t=3.2$ $\approx 6.591e-11$\\
+Variance of the classification probability over 10 models $\approx 0.2289$\\
+The observation probability tells us that it's very unlikely that the planet was observed -- however, this probability varies considerably among the 10 different models.
+
+I would be more confident in detecting the planet at $t=0.1$, because when we check the mean of each, the first test point has mean $\approx 0.4820$, compared to the second with mean $\approx 0.4171$. Since the first test point has both a higher mean and a more certain probability, I'd place my bets there.
+
+\end{enumerate}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -212,6 +252,28 @@ In addition, let $y_{nk}$ denote the $k$-th component of the output vector $\bol
 \end{enumerate}
 \end{framed}
 
+\pagebreak
+
+\emph{Solution Problem 2:}
+
+\begin{enumerate}
+\item 
+For $j \neq k$:
+\begin{align*}
+    
+\end{align*}
+$\frac{\partial s_k(\bm{z})}{\partial z_j}$
+
+\item
+Answer to pt 1
+
+\item 
+Answer to pt 1
+
+\item 
+Answer to pt 1
+
+\end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
