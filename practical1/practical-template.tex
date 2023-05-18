@@ -2,6 +2,16 @@
 
 \usepackage{common}
 \usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+    
 \title{CS181 Spring 2023 Practical I: Classifying Sounds}
 \author{Adam Mohamed \\ adammohamed@college.harvard.edu}
 \date{May 12, 2023}
@@ -10,46 +20,44 @@
 
 \maketitle{}
 
-
-\noindent This is the template you should use for submitting your practical assignment. 
-Your write-up must
-answer all questions under the approaches, results, and discussion subsections
-for each of tasks A, B, and C. \\
-
-\noindent If you used existing packages or referred to papers or blogs for ideas,  you should cite these in your report.  You must have \textit{at least one plot or table}
-for each of the results sections in parts A, B, C
-that details the performances of different methods tried, such as one like table \ref{tab:results}. Credit will be given for quantitatively reporting (with clearly
-labeled and captioned figures and/or tables) on the performance of the
-methods you tried compared to your baselines.\\
-
+% Table showing performance of logistic regression baseline models
 \begin{table}
 \centering
-\begin{tabular}{llrrr}
+\begin{tabular}{llrrrr}
+  &  & Test &   & Train &\\
  \toprule
- Model &  & Overall Acc (\%) & Class 0 Acc & ... \\
+ Class &  & Raw Ampl. (\%) & Mel Spectogram (\%) & Raw Ampl. (\%) & Mel Spectogram\\
  \midrule
- \textsc{Baseline 1} & & 0.45 & 0.60 & ...\\
- \textsc{Baseline 2} & & 2.59 & 5.00 & ... \\
- \textsc{Model 1} & & 10.59 & 17.54 & ... \\
- \textsc{Model 2} & &13.42 & 16.77 & ... \\
- \textsc{Model 3} & & 7.49 & 9.82 & ... \\
+ \textsc{Overall Accuracy} & & 17.89 & 0.60\\
+ \textsc{Air Conditioner} & & 28.67 & 5.00  \\
+ \textsc{Car Horn} & & 0.00 & 17.54  \\
+ \textsc{Children Playing} & & 34.45 & 16.77 \\
+ \textsc{Dog Bark} & & 12.23 & 9.82 \\
+ \textsc{Drilling} & & 1.14 & 9.82 \\
+ \textsc{Engine Idling} & & 30.68 & 9.82 \\
+ \textsc{Gun Shot} & & 6.67 & 9.82 \\
+ \textsc{Jackhammer} & & 4.24 & 9.82 \\
+ \textsc{Siren} & & 13.98 & 9.82 \\
+ \textsc{Street Music} & & 15.67 & 9.82 \\
  \bottomrule
 \end{tabular}
-\caption{\label{tab:results} Result tables can compactly illustrate absolute performance, but a plot may be more effective at illustrating a trend.}
+
+\caption{\label{tab:results} Baseline models' accuracy for train and test data}
 \end{table}
 
 
-\noindent Note that the limit for the report is 4 pages, please prioritize quality over 
-quantity in your submission.\\
+\section{Introduction}
+This paper explores the use of linear and nonlinear models in the classification of sounds from the \href{https://urbansounddataset.weebly.com/urbansound8k.html}{UrbanSound8k dataset}.
 
 \section{Part A: Feature Engineering, Baseline Models}
 
 \subsection{Approach}
 
-What did you do? When relevant, provide mathematical descriptions or pseudocode. Credit will be given for:
+For the baseline models, I used sklearn's LogisticRegression class to train a linear classification model on both datasets (Raw Amplitude and Mel Spectogram.) The following hyperparameters were selected:
 
   \begin{itemize}
   \item Representation: How do the two representations differ? What are potential drawbacks or advantages of each?
+  
   \item Logistic regression: Describe how the model you trained predicts output probabilities for each class.
 
   \end{itemize}

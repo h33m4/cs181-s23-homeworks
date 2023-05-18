@@ -258,20 +258,72 @@ In addition, let $y_{nk}$ denote the $k$-th component of the output vector $\bol
 
 \begin{enumerate}
 \item 
-For $j \neq k$:
+Using the quotient rule, for $j \neq k$:
 \begin{align*}
-    
+    \frac{\partial s_k(\bm{z})}{\partial z_j} &= \frac{\sum^K_{i=1}\exp(z_i) \cdot 0 - \exp(z_k)\cdot\exp(z_j)}{(\sum_{i=1}^K \exp(z_i))^2}\\
+    &= \frac{\exp(z_k)}{\sum_{i=1}^K \exp(z_i)} \cdot \left(- \frac{\exp(z_j)}{\sum_{i=1}^K \exp(z_i)}\right)\\
+    &= s_k(\boldz)(0 - s_j(\boldz))
 \end{align*}
-$\frac{\partial s_k(\bm{z})}{\partial z_j}$
+
+For $j=k$:
+\begin{align*}
+    \frac{\partial s_k(\bm{z})}{\partial z_j} &= \frac{\sum^K_{i=1}\exp(z_i) \cdot \exp(z_k) - \exp(z_k)\cdot\exp(z_j)}{(\sum_{i=1}^K \exp(z_i))^2}\\
+    &= \frac{\exp(z_k)}{\sum_{i=1}^K \exp(z_i)} \cdot \left(\frac{\sum^K_{i=1}\exp(z_i) - \exp(z_j)}{\sum_{i=1}^K \exp(z_i)}\right)\\
+    &= s_k(\boldz)(1 - s_j(\boldz))
+\end{align*}
+
+Using this result and the chain rule, we can find the derivative of $\ln s_k(\bm{z})$:
+
+\begin{align*}
+    \frac{\partial \ln s_k(\bm{z})}{\partial z_j} &= \frac{1}{s_k(\boldz)} \cdot s_k(\boldz)(\delta_{ij} - s_j(\boldz))\\
+    &= \delta_{ij} - s_j(\boldz)
+\end{align*}
 
 \item
-Answer to pt 1
+We have our negative log-likelihood:
+\begin{align*}
+    \ell(\boldW) &= -\ln p(\{\boldy_n\}_{n=1}^N | \{\boldx_n\}_{n=1}^N, \boldW)\\
+    &= -\ln \prod_{n=1}^N p(\boldy_n | \boldx_n, \boldW)\\
+    &= -\ln \prod_{n=1}^N \prod_{k=1}^K p(\boldy_n = C_k | \boldx_n, \boldW)^{y_{nk}}\\
+    &= \sum_{n=1}^N \sum_{k=1}^K y_{nk} \ln s_k(\boldW\boldx_n) 
+\end{align*}
+
 
 \item 
-Answer to pt 1
+We know that $\boldz_i = \boldW \boldx_i$. Thus, $z_{ij} = w_j x_i$ Taking the derivative of the NLL:
+\begin{align*}
+    \frac{\partial\ell(\boldW)}{\partial z_{ij}} = \frac{\partial\ell(\boldW)}{\partial w_j x_i} &= -\sum_{k=1}^K y_{ik} \frac{1}{s_k(\boldW\boldx_i)} \cdot s_k(\boldW\boldx_i)(\delta_{jk} - s_j(\boldW\boldx_i))\\
+    &= \sum_{k=1}^K y_{ik} (s_j(\boldW\boldx_i) - \delta_{jk})\\
+    &= \sum_{k=1}^K y_{ik} (s_j(\boldz_i) - \delta_{jk})\\
+\end{align*}
+
+For the term in the sum where $k=j$:
+
+\begin{align*}
+    y_{ik}(s_k(\boldz_i) - 1) = y_{ij}s_j(\boldz_i) - y_{ij} 
+\end{align*}
+
+For all other terms:
+
+\begin{align*}
+    \sum^K_{k=1, k \neq j} y_{ik}s_j(\boldz_i)
+\end{align*}
+
+Summing all of the terms together:
+
+\begin{align*}
+    \sum_{k=1}^K y_{ik} (s_j(\boldz_i) - \delta_{jk}) &= y_{ij}s_j(\boldz_i) - y_{ij} + \sum^K_{k=1, k \neq j} y_{ik}s_j(\boldz_i)\\
+    &= \sum^K_{k=1} y_{ik}s_j(\boldz_i) - y_{ij}\\
+    &= s_j(\boldz_i) - y_{ij}
+\end{align*}
 
 \item 
-Answer to pt 1
+When we consider the second derivative $\frac{\partial z_{nk}}{\boldw_j}$ we see that when $j \neq k$, it evaluates to zero since $z_{nk} = \boldw_k \boldx_n$. When $j = k$, it evaluates to $x_n$. Thus, we have:
+
+\begin{align*}
+    \frac{\partial \ell}{\partial \boldw_j} &= \sum_{n=1}^N \frac{\partial \ell}{\partial z_{nk}} x_n\\
+    &= \sum_{n=1}^N (s_j(\boldz_n) - y_{nj})x_n
+\end{align*}
 
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
