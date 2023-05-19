@@ -335,9 +335,20 @@ I implemented Q-learning with an $\epsilon$-greedy policy, using the following p
     \item $\gamma = 0.1$
 \end{itemize}
 
+The algorithm uses a Q-table that stores all of the expected rewards for all the actions, at all states. It is updated iteratively with each epoch, and is used to estimate the highest expected reward. At each iteration, the monkey has an probability $\epsilon$ of randomly picking an action (exploring), and probability $1 - \epsilon$ of taking the action with the highest expected reward. Also implemented is $\epsilon$ decay function that decays the Learner's $\epsilon$ at every iteration using a minimum epsilon value, the starting value of epsilon and the total number of moves at a given iteration.
+
 \emph{Evaluation:}\\
 
-On several test runs, the monkey consistently 
+On several test runs, the monkey consistently scored above the benchmark of 50 within the first 100 epochs. See below:
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=12cm]{hw5/figures/HW5_P2_Performance.png}
+    \caption{Performance of Q-learning algorithm}
+    \label{fig:p2_performance}
+\end{figure}
+
+
 
 \emph{Code:}
 \lstinputlisting[language=Python]{T5_P2/Learner.py}
