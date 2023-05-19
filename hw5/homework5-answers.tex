@@ -348,7 +348,16 @@ On several test runs, the monkey consistently scored above the benchmark of 50 w
     \label{fig:p2_performance}
 \end{figure}
 
+My initial parameter choices were informed in part by intuition, and in part by a grid search that I performed on a parameter space that I picked arbitrarily. For $\gamma$, a higher value was picked because it feels natural to have a higher discount value--a greedy algorithm would prioritize surviving at every tree, which seems like a good strategy to survive as long as possible. For $\epsilon$, we want the monkey to explore less and trust its learned knowledge more, and so it has a low value, and in addition it decays over time (the more the monkey learns, the more it relies on its learned knowledge.)
 
+Here is a plot of the score of several runs of the game, each with a different parameter configuration:
+
+\begin{figure}
+    \centering
+    \includegraphics{}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
 
 \emph{Code:}
 \lstinputlisting[language=Python]{T5_P2/Learner.py}
@@ -370,8 +379,14 @@ Every computation consumes energy. Over the past decades large scale data center
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \subsection*{Name}
+Adam Mohamed
 \subsection*{Collaborators and Resources}
-Whom did you work with, and did you use any resources beyond cs181-textbook and your notes?
+I used the following resources:
+\href{https://www.youtube.com/watch?v=iKdlKYG78j4&ab_channel=Dr.DanielSoper}{Q-Learning: A Complete Example in Python}
+\href{https://stackoverflow.com/questions/70937689/plotting-multiple-line-graphs-in-matplotlib}{Multiple line graphs matplotlib}
+
+and had some help from Evan Jiang
+
 \subsection*{Calibration}
-Approximately how long did this homework take you to complete (in hours)? 
+This homework took about 6 hours
 \end{document}
