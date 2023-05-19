@@ -131,6 +131,9 @@ Repeat this process (reporting the first model's classification probability and 
 \end{problem}
  \let\cleardoublepage\clearpage
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Solution Problem 1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 
 \textbf{Solution 1:}
@@ -252,9 +255,12 @@ In addition, let $y_{nk}$ denote the $k$-th component of the output vector $\bol
 \end{enumerate}
 \end{framed}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Solution Problem 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \pagebreak
 
-\emph{Solution Problem 2:}
+\textbf{Solution 2:}
 
 \begin{enumerate}
 \item 
@@ -371,6 +377,26 @@ After implementing the above classifiers, complete the following exercises:
     Interpret how each model makes its classification decision. What are the pros and cons of each interpretation? What else should we, the modelers, be aware of when making predictions on a test point ``far" from our training data? \textbf{Your response should no be longer than 5 sentences.}
 \end{enumerate}
 \end{problem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SOLUTION: Problem 3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\textbf{Solution 3}
+
+\begin{enumerate}
+\item
+\begin{figure}[h]
+\subfloat[Softmax Regression Result]{\includegraphics[width = 3in]{hw2/softmax_regression_result.png}} 
+\subfloat[Basis Result]{\includegraphics[width = 3in]{hw2/basis_result.png}}\\
+\subfloat[KNN Result]{\includegraphics[width = 3in]{hw2/knn_result.png}} 
+\caption{Plots decision boundaries for classifiers a, b and c}
+\label{fig:problem_3_1}
+\end{figure}
+\end{enumerate}
+
+As we can see above, the decision boundaries for the 3 different models have different shapes. The linear softmax regression model has straight lines as boundaries, while model \textbf{b} has non-linear boundaries (given the $\ln$ and exponential functions in the basis, this makes sense.) The KNN boundary is a lot more 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 4
