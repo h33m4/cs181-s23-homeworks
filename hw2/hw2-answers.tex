@@ -390,13 +390,29 @@ After implementing the above classifiers, complete the following exercises:
 \begin{figure}[h]
 \subfloat[Softmax Regression Result]{\includegraphics[width = 3in]{hw2/softmax_regression_result.png}} 
 \subfloat[Basis Result]{\includegraphics[width = 3in]{hw2/basis_result.png}}\\
-\subfloat[KNN Result]{\includegraphics[width = 3in]{hw2/knn_result.png}} 
+\subfloat[KNN1 Result]{\includegraphics[width = 3in]{hw2/knn1_result.png}}
+\subfloat[KNN5 Result]{\includegraphics[width = 3in]{hw2/knn5_result.png}}
 \caption{Plots decision boundaries for classifiers a, b and c}
 \label{fig:problem_3_1}
 \end{figure}
-\end{enumerate}
 
-As we can see above, the decision boundaries for the 3 different models have different shapes. The linear softmax regression model has straight lines as boundaries, while model \textbf{b} has non-linear boundaries (given the $\ln$ and exponential functions in the basis, this makes sense.) The KNN boundary is a lot more 
+The vanilla and transformed basis softmax models have distinctly different boundaries, despite both being regression models–vanilla model has straight lines, which makes sense since it uses linear, non-transformed features. The transformed basis model's decision boundaries reflect the nonlinear functions in the feature map $\phi(\boldx) = [\ln(x_1 + 10), x_2^2]^T$, which cause the curved shape of the boundaries (the second covariate being squared gives rise to the parabolic-looking class boundary). Both models have similar points of intersection for the decision boundaries. 
+
+The KNN boundaries are based on the nearest neighbours, and for both $k=1$ and $k=5$, we have a similar shape. It's clear that $k=1$ has a smoother shape, since we are only looking at the nearest neighbour to make a prediciton. For $k=5$, the boundary has a lot more variation, since it is being pulled to wherever there is a high density of points.
+
+\item 
+We compute the following predictions and prediction probabilities for $(3, -2)$:
+
+\begin{itemize}
+    \item Vanilla Softmax: Dwarf (class 0) with probabilities [1.0 1.318e-28 2.568e-40]
+    \item Basis Softmax: Giant (class 1) with probabilities [0.0342 0.965 0.00119]
+    \item KNN-1: Dwarf (class 0) with all neighbours class 0
+    \item KNN-5: Dwarf (class 0) with all neighbours class 0
+\end{itemize}
+
+Each model generates its decision on an input based on the boundaries that it fits to the training data. If the model approximates the ground-truth model, then our generated decision will be an accurate approximation -- i.e. if there is a linear relationship between the covariates and the output, it might be reasonable to be confident in our linear model's predictions. However, when it comes to making predictions on test points that are ``far'' from the training data, we should be aware that: in the case of a linear/non-linear model, even if it is appropriate for the training data, it might not be for data that is far away (for example, a mixture model might be more appropriate); in the case of KNN model, it might not be generalizable to data that is far away from the training data, and we should be less confidence in our predictions.
+
+\end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Problem 4
@@ -456,20 +472,65 @@ Since testing on a larger patient population is expensive for various reasons, t
 \end{enumerate}
 \end{framed}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Solution Problem 4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
+
+\textbf{Solution 4:}
+
+\begin{enumerate}
+\item 
+We have the following classification probabilities:
+For \emph{drug administered}$=1$:
+\begin{align*}
+    p(y=1|x) = \sigma(0.2 + 0.8 * 1 - 0.012 * 50 + 0.45 * 0 + 0.001 * 168 - 0.007 * 140) \approx 0.40
+\end{align*}
+For \emph{drug administered}$=0$:
+\begin{align*}
+    p(y=1|x) = \sigma(0.2 + 0.8 * 0 - 0.012 * 50 + 0.45 * 0 + 0.001 * 168 - 0.007 * 140) \approx 0.23
+\end{align*}
+
+The change in classification probability is 0.17, which tells us that taking the drug increases the likelihood of being cured. However, since the estimate of $w_1$ is based only on 100 observations, it is not conclusive whether the drug is generally effective.
+
+\item 
+\begin{enumerate}
+    \item Model B's reduced uncertainty could be explained by the possibility that there is a more complicated relationship between the predictors and the outcome, and the interaction terms could capture that complexity (compared to Model A, which shows a linear and independent relationship between the predictors and the outcome.)
+
+    \item The rise in uncertainty could be attributed to having a highly complex model overfitting to each bootstrapped sample, resulting in high variance over the different bootstrap models. To account for this, we might add a regularization term to reduce overfitting, and/or train over a larger set of data to help our model generalize better.
+
+    \item When it comes to the body, different factors are often interlinked, and so I'm more inclined towards Model C, since it might better capture nuances in the relationships between different factors. This is under the assumption that it is possible to reduce the predictive interval -- if it wasn't, then Model B would be a better bet, since variability is especially undesirable in healthcare contexts.
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+    \item With a confidence interval of $\pm 6$, I would not recommend it to the patient, since (price of the medication aside) there is a chance that it would have a negative impact on them, and given that they are already critically-ill, I would not advise they take that risk. Of course, being critically-ill, they may not be able to afford time/patience, but if it is possible, I would recommend they wait till there is more conclusive information about its effects and efficacy.
+
+    \item It could increase the sample size and diversify the data set to get a tighter confidence interval and improve its generalizability.
+
+    \item It would be more costly for $w_1 = 1$, since the confidence intervals would need to be a lot tighter (too high of a confidence interval would indicate that a possible negative impact by taking the medicine) and we would not want to negatively impact anyone in the drug trial process.
+
+    \item Using domain knowledge is important as it informs our decisions when we make and evaluate our models. For the real value of $w_1$, we should use them as benchmarks/goals for how accurate our model is. However, it might be a good idea not to set them, as there is always room for improvement, and by working towards getting a model that can capture the true value through training, we may end up with a stronger model–by fixing it from the start, we lose the potential of having a benchmark to evaluate our model against.
+\end{enumerate}
+
+\item
+Here, our confounding factor is people having the choice of administering the drug in the first recruitment protocol. For example, patients who actively sought out and signed up for the trial may also be taking other measures to help cure the disease, and so the result of being cured may have been influenced by other factors besides the actual medication. Thus, I'd be more trusting of the model trained on the second dataset, since that recruitment protocol gets rid of those confounding factors with the patients being referred to the company, and randomly selected for having the drug administered.
+
+\end{enumerate}
+
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Name and Calibration
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Name}
+Adam Mohamed
 
 \subsection*{Collaborators and Resources}
-Whom did you work with, and did you use any resources beyond cs181-textbook and your notes?
+Evan Jiang, Taj Gulati
 
 \subsection*{Calibration}
-Approximately how long did this homework take you to complete (in hours)?
-
+This pset took $~10$ hours
 
 
 \end{document}
