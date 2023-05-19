@@ -47,11 +47,11 @@ The inputs for the model trained on the Raw Amplitude dataset are appropriately 
 
 \subsection{Results}
 
-See Table 1 in the Tables section for class-specific accuracies. Our Raw Amplitude model performs with overall test accuracy of $17.89\%$, while Mel Spectogram model performs with overall $36.69\%$. Train accuracy for both models is very high, and about the same ($\approx 97.5$.)
+See Table 1 in the Appendix for class-specific accuracies. Our Raw Amplitude model performs with overall test accuracy of $17.89\%$, while Mel Spectogram model performs with overall $36.69\%$. Train accuracy for both models is very high, and about the same ($\approx 97.5$.)
 
 \subsection{Discussion}
 
-There are several possible reasons why the baselines might be performing poorly. On one hand, some of the specific classes constitute a small proportion of the training data, which might not be sufficient for the model to learn that classes distinguishing features well. For example, \texttt{Car Horn} and \texttt{Gun Shot}, which make up $3.54\%$ and $1.49\%$ of the test data respectively, have particularly low scores (with \texttt{Car Horn} scoring 0.)
+There are several possible reasons why the baselines might be performing poorly. On one hand, some of the specific classes constitute a small proportion of the training data, which might not be sufficient for the model to learn that classes distinguishing features well. For example, \texttt{Car Horn} and \texttt{Gun Shot}, which make up $3.54\%$ and $1.49\%$ of the test data respectively, have particularly low scores (with \texttt{Car Horn} scoring 0.) This could also explain the high discrepancy between the test accuracy and train accuracy, which indicates possible overfitting. 
 
 On the other hand, it could be the case that our linear Logistic Regression doesn't capture the trends accurately. For example, some of the classes might be related in a more complicated, non-linear way (for example, dogs barking might be correlated to children playing.)
 
@@ -63,50 +63,89 @@ The Mel Spectogram's higher performance is likely due to the greater richness of
 
 \subsubsection{Approach}
 
-What did you do? Credit will be given for:
+For our nonlinear models, I used \texttt{SKLearn}'s Random Forest Classifier and K-Nearest Neighbours classes.\\
 
-  \begin{itemize}
-  \item Provide mathematical descriptions or pseudocode to help us understand how the models you tried make predictions and are trained.
-  \end{itemize}
+\noindent \textbf{Random Forest}: This is a classification algorithm that uses an ensemble of decision trees to make classification predictions. The ensemble of decision trees are trained on the training data using techniques like bootstrapping aggregation and feature randomness such that they are as uncorrelated with each other as possible, and the RF generates a prediction by taking the majority of the class predictions of the individual decision trees.\\
+
+\noindent \textbf{KNN}: This classification algorithm doesn't need training. For a given input, it uses the training data, generating a prediction based on the majority class of the K-nearest neighbours. Distance function of \texttt{SKLearn}'s \texttt{KNeighborsClassifier} is the standard Euclidean distance by default.\\
+
+\noindent I initialized instances with default settings for the hyperparameters, at $n = 100$ and $k = 5$. These seemed like good starting points; for RF, $n = 100$ is a balance between overfitting and having a high number of trees for higher accuracy, and for KNN $k = 5$ avoids overfitting (like $k=1$ would), but doesn't make the predictions too general, which is likely to happen for a higher value of $k$ given all the noise that can be found in the sounds :D
 
 \subsubsection{Results}
-This section should report on the following questions: 
+See Table 2 in the Appendix for class-specific accuracy. See below for the overall accuracies of our models so far:
 
-\begin{itemize}
-\item  What is the overall and per-class classification accuracy of the models that you implemented?
-\end{itemize}
+\begin{table}[h!]
+\centering
+\begin{tabular}{lllll}
+             & \multicolumn{2}{l}{Overall Test Accuracy (\%)} & \multicolumn{2}{l}{Overall Train Accuracy (\%)} \\ \toprule
+Model        & Raw Amplitude         & Mel Spectogram         & Raw Amplitude          & Mel Spectogram         \\ \toprule
+Baseline LRC & 17.89                 & 36.69                  & 97.73                  & 97.55                  \\
+RF           & 24.62                 & 49.20                  & 100.00                 & 100.00                 \\
+KNN          & 17.84                 & 26.90                  & 27.30                  & 59.54                 
+\end{tabular}
+\caption{\label{tab:1}Table showing overall accuracy for our baseline and preliminary models}
+\end{table}
 
+
+\noindent We see that overall, RF outperforms our baseline models and KNN on both the Raw Amplitude and the Mel Spectogram datasets, with a score of $49.2\%$ on the Mel Spectogram model. KNN performs worse than baseline models and RFF.
 
 \subsubsection{Discussion}
-Compare your results to the logistic regression models in Part A and discuss what your results imply about the task.
+The RF had an especially high accuracy compared to the rest of the models, despite also having a large discrepancy between its test and train accuracy (indicating overfitting.) It's relatively high performance on the test data is likely due to its ability to capture complex trends, given that everyday sounds (like the ones in the given classes) tend to be non-linear and complicated. It is also better at handling noise due to its ensembling of multiple, uncorrelated decision trees. This further explains why the baseline model's performance wasn't so good – they are not quite as good at handling noise, and they don't capture the complicated trends that our sound files contain.
 
+On the other hand, the KNN model's poor performance could be due to a poor choice of $k$ -- however, it may also not be a suitable model for our data. It performs relatively well for \texttt{siren} (see results in appendix) but on other classes does poorly.
 
 \subsection{Hyperparameter Tuning and Validation}
 
 \subsubsection{Approach}
-What did you do? Credit will be given for:
 
-  \begin{itemize}
-  \item Making tuning and configuration decisions using thoughtful experimentation.  
-    How did you perform your hyperparameter search, and what hyperparameters did you search over?
-  \end{itemize}
+To tune and validate my models of interest, I used \texttt{SKLearn}'s GridSearchCV, searching over number of estimators for RF and $k$ for KNN. For both, I used cross-validation of 5 to protect against overfitting and to test the models against how they might perform on unseen data.
+
+\noindent RF: For Random Forest, I ran GridSearchCV, searching through $n$ in the range between 20 and 200, in increments of 20. The result was $180$ for both datasets, and so I ran another GridSearch in smaller increments and on a smaller range, from 160 to 200, with increments of $5$. 
+
+\noindent KNN: Avoiding $k=1$ due to risk of overfitting to the noise in the data, I searched through each $k$ value between $2$ and $10$.
 
 \subsubsection{Results}
-Present your results of your hyperparameter search in a way that best reflects how to communicate your conclusions.
+\noindent RF: RF's grid search yielded $n = 170$ for Mel data, and $n = 195$ for Amp. These provided overall accuracy scores of 
+
+\noindent KNN: 
 
 \subsubsection{Discussion}
 
-Why do you expect the tuned models to perform better than the baseline models and the model used in First Step? Discuss your validation strategy and your conclusions.
+The accuracy scores didn't improve as much as I'd hoped. Due to time constraints, I did not search over max-depth, which I suspect would've helped improve the model (with less over-fitting.) A RandomizedSearchCV might have been more appropriate, considering the time it took to run the GridSearchCV (to run it exhaustively 
+
+
+\section{Sources}
+
+\begin{itemize}
+    \item \href{https://towardsdatascience.com/understanding-random-forest-58381e0602d2}{Understanding Random Forest}
+    \item \href{https://medium.com/analytics-vidhya/understanding-the-mel-spectrogram-fca2afa2ce53}{Understanding the Mel Spectogram}
+\end{itemize}
+
 
 \section{Final Write-up and Reflections}
 
 \subsection{Discussion:} 
 
-Include your paragraph reflections on the key components listed in the instructions.
+\noindent \textbf{Data Pipeline:} For all the models, I used both datasets. Mel Spectogram data consistently yielded better results, but rather than sticking to one for the latter models, I was curious to see the difference in accuracy. The Mel Spectogram data was flattened before being used, and this boosted performance \\
+
+\noindent \textbf{Model Selection:} \\
+
+\noindent \textbf{Model Tuning:}\\
+
+\noindent \textbf{Bias-Variance Trade-off:}\\
+
+\noindent \textbf{Evaluation:}\\
+
+\noindent \textbf{Domain-specific Evaluation:}\\
+
+\noindent \textbf{Design Review:}\\
+
+\noindent \textbf{Execution \& Implementation:}\\
+
 
 
 \newpage
-\section{Tables}
+\section{Appendix}
 
 \listoftables
 \vspace{5pt}
