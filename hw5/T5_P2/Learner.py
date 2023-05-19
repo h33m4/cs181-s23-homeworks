@@ -13,19 +13,19 @@ class Learner(object):
     This agent jumps randomly.
     """
 
-    def __init__(self):
+    def __init__(self, alpha=0.1, gamma=0.1, initial_epsilon=0.01, eps_decay_rate=0.1):
         self.last_state = None
         self.last_action = None
         self.last_reward = None
 
         # Initialize our hyperparameters
-        self.alpha = 0.1
-        self.gamma = 0.1
+        self.alpha = alpha
+        self.gamma = gamma
 
         self.min_epsilon = 0.001
-        self.initial_epsilon = 0.01
+        self.initial_epsilon = initial_epsilon
         self.epsilon = self.initial_epsilon
-        self.eps_decay_rate = 0.1
+        self.eps_decay_rate = eps_decay_rate
 
         self.total_moves = 0
 
