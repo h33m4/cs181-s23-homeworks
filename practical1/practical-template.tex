@@ -90,9 +90,9 @@ KNN          & 17.84                 & 26.90                  & 27.30           
 \noindent We see that overall, RF outperforms our baseline models and KNN on both the Raw Amplitude and the Mel Spectogram datasets, with a score of $49.2\%$ on the Mel Spectogram model. KNN performs worse than baseline models and RFF.
 
 \subsubsection{Discussion}
-The RF had an especially high accuracy compared to the rest of the models, despite also having a large discrepancy between its test and train accuracy (indicating overfitting.) It's relatively high performance on the test data is likely due to its ability to capture complex trends, given that everyday sounds (like the ones in the given classes) tend to be non-linear and complicated. It is also better at handling noise due to its ensembling of multiple, uncorrelated decision trees. This further explains why the baseline model's performance wasn't so good – they are not quite as good at handling noise, and they don't capture the complicated trends that our sound files contain.
+The RF had an especially high accuracy compared to the rest of the models, despite also having a large discrepancy between its test and train accuracy (indicating overfitting.) It's relatively high performance on the test data is likely due to its ability to capture complex trends, given that everyday sounds (like the ones in the given classes) tend to be non-linear and complicated. It is also better at handling noise due to its ensembling of multiple, uncorrelated decision trees. This further explains why the baseline model's performance wasn't so good – they are not quite as good at handling noise, and they don't capture the complicated trends that our sound files contain.\\
 
-On the other hand, the KNN model's poor performance could be due to a poor choice of $k$ -- however, it may also not be a suitable model for our data. It performs relatively well for \texttt{siren} (see results in appendix) but on other classes does poorly.
+\noindent On the other hand, the KNN model's poor performance could be due to a poor choice of $k$ -- however, it may also not be a suitable model for our data. It performs relatively well for \texttt{siren} (see results in appendix) but on other classes does poorly.
 
 \subsection{Hyperparameter Tuning and Validation}
 
@@ -100,19 +100,22 @@ On the other hand, the KNN model's poor performance could be due to a poor choic
 
 To tune and validate my models of interest, I used \texttt{SKLearn}'s GridSearchCV, searching over number of estimators for RF and $k$ for KNN. For both, I used cross-validation of 5 to protect against overfitting and to test the models against how they might perform on unseen data.
 
-\noindent RF: For Random Forest, I ran GridSearchCV, searching through $n$ in the range between 20 and 200, in increments of 20. The result was $180$ for both datasets, and so I ran another GridSearch in smaller increments and on a smaller range, from 160 to 200, with increments of $5$. 
+\noindent \textbf{RF}: For Random Forest, I ran GridSearchCV, searching through $n$ in the range between 20 and 200, in increments of 20. The result was $180$ for both datasets, and so I ran another GridSearch in smaller increments and on a smaller range, from 160 to 200, with increments of $5$.\\
 
-\noindent KNN: Avoiding $k=1$ due to risk of overfitting to the noise in the data, I searched through each $k$ value between $2$ and $10$.
+\noindent \textbf{KNN}: Avoiding $k=1$ due to risk of overfitting to the noise in the data, I searched through each $k$ value between $2$ and $10$. 
 
 \subsubsection{Results}
-\noindent RF: RF's grid search yielded $n = 170$ for Mel data, and $n = 195$ for Amp. These provided overall accuracy scores of 
+\noindent \textbf{RF}: On the refined second search, GridSearch yielded $n = 195$ for Amp and $n = 170$ for Mel data. These provided overall accuracy scores of $26.35\%$ and $48.57\%$ respectively (see Table 5 in Appendix.)\\
 
-\noindent KNN: 
+\noindent \textbf{KNN}: The results of our GridSearch are outlined in Table 6 in the appendix. For the Raw Amplitude dataset, it found $k=2$ to be the best fit with a score of $17.8\%$, and for Mel Spectogram $k=3$ with a score of $32.2\%$.
 
 \subsubsection{Discussion}
 
-The accuracy scores didn't improve as much as I'd hoped. Due to time constraints, I did not search over max-depth, which I suspect would've helped improve the model (with less over-fitting.) A RandomizedSearchCV might have been more appropriate, considering the time it took to run the GridSearchCV (to run it exhaustively 
+To validate the results, I compared the overall predictive accuracies. This notably takes away from specific-class high performances (such as the KNN model's high performance on \texttt{siren}.) I expect the models to produce better results after tuning, because we can control the hyperparameters to produce the best results, and because cross-validation helps account for noise in the data, reducing overfitting across the models and assessing model performance on unseen data.\\
 
+\noindent For RF, the accuracy scores didn't improve as much as I'd hoped, with a slight improvement on the Raw Amplitude models (24.62 vs 26.35), but slightly worse performance on the Mel Spectogram models (49.20 vs 48.57). The expectation was for our hyperparameter tuning to produce a model with better predictive accuracy than our untuned model, but perhaps to achieve this outcome, I would need to tune over more than 1 hyperparameter, and fit the preliminary model over multiple seeds (to account for random variation and noise.)\\
+
+\noindent Our results for KNN show no improvement on the Raw Amplitude set over the preliminary model, but a slight improvement on the Mel Spectogram dataset. The model performs best on classes of sounds that are generally consistent. However, overall, it doesn't fit the data well (neither training nor test) and may not be the appropriate model for this problem.
 
 \section{Sources}
 
@@ -126,22 +129,29 @@ The accuracy scores didn't improve as much as I'd hoped. Due to time constraints
 
 \subsection{Discussion:} 
 
-\noindent \textbf{Data Pipeline:} For all the models, I used both datasets. Mel Spectogram data consistently yielded better results, but rather than sticking to one for the latter models, I was curious to see the difference in accuracy. The Mel Spectogram data was flattened before being used, and this boosted performance \\
+\noindent \textbf{Data Pipeline:} For all the models, I used both datasets. Mel Spectogram data consistently yielded better results, but rather than sticking to one for the latter models, I was curious to see the difference in accuracy. The Mel Spectogram data was flattened to 1D before being used--this boosted performance on training the data/making predictions for our various models.\\
 
-\noindent \textbf{Model Selection:} \\
+\noindent \textbf{Model Selection:} I chose to implement 2 models in Part B: Random Forest and K-Nearest Neighbours. The one I would choose would be Random Forest. Both have their trade-offs--they require more time to train (in the case of RF) or make predictions (KNN), but this also allows them to capture more complex trends in the data. Not using KNN loses the high accuracy it has for very consistent, loud sounds (like \texttt{siren}.) However, RF provides more consistent accuracy across the board.\\
 
-\noindent \textbf{Model Tuning:}\\
+\noindent \textbf{Model Tuning:} My model tuning was done exhaustively over a chosen hyperparameter set for both models. For RF, due to time constraints, I did not search over max-depth, which I suspect would've helped improve the model (with less over-fitting.) A RandomizedSearchCV might have been more appropriate, considering the time it took to run the GridSearchCV (to run it exhaustively.)\\
 
-\noindent \textbf{Bias-Variance Trade-off:}\\
+\noindent \textbf{Bias-Variance Trade-off:} My models had a tendency to overfit, especially RF (with perfect scores on the training data.) This is an expected consequence of the noise in our data (for our Logistic Regression models), as well as the complexity of the RF model. I tried to account for this using 5-fold cross-validation while tuning for hyperparameters, and perhaps would have yielded better results with an improved tuning strategy (as discussed above.)\\
 
-\noindent \textbf{Evaluation:}\\
+\noindent \textbf{Evaluation:} For evaluating the models, I mainly looked at the overall predictive accuracy of each. This was a simple and easy metric to consider, but it doesn't account for the imbalance within the classes, which was obvious when looking at higher performance on some of the specific classes for our poor-performing models (and vice versa.) Higher consistency in accuracy was also considered, as this helped us work towards more generalizable models--however, the same issue arises where we compromise for higher class-specific performance.\\
 
-\noindent \textbf{Domain-specific Evaluation:}\\
+\noindent \textbf{Domain-specific Evaluation:} It was important to think about how to choose and train our model given that our sound data is highly complex and highly noisy. Simple logistic regression would be unable to accurately model our data, which we saw in our results, and attempted more complex models hopefully would be able to capture the complexity while avoiding overfitting. Our KNN model's $k=5$ focuses on looking at the closest sounds to classify an input, and our RF's ensembling with bootstrapping techniques aims to get the right bias-variance balance.\\
 
-\noindent \textbf{Design Review:}\\
+\noindent That being said, our models still have a lot of room for improvement, and perhaps a different model that is better at ignoring noise in data is more suitable for this problem (such as CNN.)
 
-\noindent \textbf{Execution \& Implementation:}\\
+\noindent \textbf{Design Review:}
+My tuning could have been improved, as mentioned eralier: I could have checked multiple hyperparams (specifically for RF) and used RandomizedSearchCV for more efficient hyperparameter search, as mentioned earlier.\\
 
+\noindent For evaluation, I could have used standard deviation of predictive accuracy for different seeds to better understand the certainty of the accuracies, and to better evaluate the performance of the models. Other metrics could have also been used, including using \texttt{SKLearn}'s \texttt{precision\_recall\_fscore\_support} function, and considering the ROC curve and corresponding AUC curve. However, due to space and time constraints, these were not considered in this paper.\\
+
+\noindent I could also have used some way of accounting for class imbalance to provide results that gave the full picture, given that some classes made up a very small proportion of the training dataset.
+\\
+
+\noindent \textbf{Execution \& Implementation:} I would not deploy this model, based on the accuracy scores. There are certainly real-world considerations to consider–with potential uses like accessibility (assistance for people who are deaf/have impaired hearing) or crime prediction (which in itself raises ethical concerns, such as infringement on privacy and freedom), and I think that our model would have to perform a lot better before it could be deployed in such contexts. With that said, training time is a consideration for more complicated models that would better be suited for sound classification.
 
 
 \newpage
@@ -170,7 +180,7 @@ Jackhammer       & 4.24              & 46.19              & 99.54             & 
 Siren            & 13.98             & 70.34              & 94.16             & 99.55               \\
 Street Music     & 15.67             & 23.33              & 98.14             & 97.29               \\ \bottomrule
 \end{tabular}
-\caption{\label{tab:1} Baseline model accuracy on Raw Amplitude \& Mel Spectogram data}
+\caption{\label{tab:2} Baseline model accuracy on Raw Amplitude \& Mel Spectogram data}
 \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -195,7 +205,7 @@ Siren            & 8.05              & 61.86              & 100.00            & 
 Street Music     & 11.00             & 51.33              & 100.00            & 100.00              \\ \bottomrule
 \end{tabular}
 
-\caption{\label{tab:2} Vanilla RFF Performance on Raw Amplitude \& Mel Spectogram data}
+\caption{\label{tab:3} Vanilla RFF Performance on Raw Amplitude \& Mel Spectogram data}
 \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -220,7 +230,44 @@ Siren            & 80.93             & 26.27              & 75.15             & 
 Street Music     & 2.33              & 6.00               & 10.14             & 21.14               \\ \bottomrule
 \end{tabular}
 
-\caption{\label{tab:3} Vanilla KNN Performance on Raw Amplitude \& Mel Spectogram data}
+\caption{\label{tab:4} Vanilla KNN Performance on Raw Amplitude \& Mel Spectogram data}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table for Tuning RF 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lll}
+\toprule
+Model             & Number of Estimators & Test Accuracy (\%) \\ \hline
+RF Raw Amplitude  & \textbf{195}         & 26.35              \\
+RF Mel Spectogram & \textbf{170}         & 48.57              \\ 
+\bottomrule
+\end{tabular}
+\caption{\label{tab:5} Tuning RF - Accuracy Score for Model trained on Best Parameters}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table for Tuning KNN  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lll}
+\toprule
+k & KNN Raw Ampl (\%) & KNN Mel Spect (\%) \\ \midrule
+2 & \textbf{17.8}     & 31.7               \\
+3 & 17.7              & \textbf{32.2}      \\
+4 & 17.5              & 31.7               \\
+5 & 16.8              & 31.3               \\
+6 & 16.0              & 30.1               \\
+7 & 15.8              & 30.4               \\
+8 & 15.9              & 29.9               \\
+9 & 15.5              & 29.3               \\ \bottomrule
+\end{tabular}
+\caption{\label{tab:6} Tuning KNN - Average Accuracy for Different K Values}
 \end{table}
 
 
