@@ -3,6 +3,8 @@
 \usepackage{common}
 \usepackage{booktabs}
 \usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{graphicx}
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
@@ -11,39 +13,16 @@
     pdftitle={Overleaf Example},
     pdfpagemode=FullScreen,
     }
+
+\newcommand{\heart}{\ensuremath\heartsuit}
     
 \title{CS181 Spring 2023 Practical I: Classifying Sounds}
-\author{Adam Mohamed \\ adammohamed@college.harvard.edu}
+\author{Adam Mohamed, with help from Evan Jiang and Taj Gulati \heart \\ adammohamed@college.harvard.edu}
 \date{May 12, 2023}
 \begin{document}
 
 
 \maketitle{}
-
-% Table showing performance of logistic regression baseline models
-\begin{table}
-\centering
-\begin{tabular}{llrrrr}
-  &  & Test &   & Train &\\
- \toprule
- Class &  & Raw Ampl. (\%) & Mel Spectogram (\%) & Raw Ampl. (\%) & Mel Spectogram\\
- \midrule
- \textsc{Overall Accuracy} & & 17.89 & 0.60\\
- \textsc{Air Conditioner} & & 28.67 & 5.00  \\
- \textsc{Car Horn} & & 0.00 & 17.54  \\
- \textsc{Children Playing} & & 34.45 & 16.77 \\
- \textsc{Dog Bark} & & 12.23 & 9.82 \\
- \textsc{Drilling} & & 1.14 & 9.82 \\
- \textsc{Engine Idling} & & 30.68 & 9.82 \\
- \textsc{Gun Shot} & & 6.67 & 9.82 \\
- \textsc{Jackhammer} & & 4.24 & 9.82 \\
- \textsc{Siren} & & 13.98 & 9.82 \\
- \textsc{Street Music} & & 15.67 & 9.82 \\
- \bottomrule
-\end{tabular}
-
-\caption{\label{tab:results} Baseline models' accuracy for train and test data}
-\end{table}
 
 
 \section{Introduction}
@@ -53,33 +32,32 @@ This paper explores the use of linear and nonlinear models in the classification
 
 \subsection{Approach}
 
-For the baseline models, I used sklearn's LogisticRegression class to train a linear classification model on both datasets (Raw Amplitude and Mel Spectogram.) The following hyperparameters were selected:
+For the baseline models, I used sklearn's LogisticRegression class to train a linear classification model on both datasets (Raw Amplitude and Mel Spectogram.) The model takes in as input a sound, and predicts one of the 10 classes/categories to which the sound belongs. 
 
-  \begin{itemize}
-  \item Representation: How do the two representations differ? What are potential drawbacks or advantages of each?
-  
-  \item Logistic regression: Describe how the model you trained predicts output probabilities for each class.
+For the 2 different datasets, the inputs have different representations:
 
-  \end{itemize}
+\begin{itemize}
+    \item Each point in the Raw Amplitude dataset is made up of 44,100 amplitude values (taken over the span of 2 seconds.)
+    \item The Mel Spectogram dataset is a 2D representation of the corresponding sound's raw amplitude, where each point has shape $(128 \times 87)$ -- as described in the handout, the original amplitudes are split up into 87 time windows, with each window containing 'audio-related features'. The resulting representation is richer and contains more information than the Raw Amplitude dataset.
+\end{itemize}
+
+\noindent Logistic Regression: our model predicts data by taking a linear combination of a given input's features, weighted by the estimated parameters for each of the 10 classes (calculated when the model is trained). The resulting linear combinations are passed to the softmax function to calculate a vector of probabilities (one for each classes linear combination) that sum to 1. The predicted class is calculated based on these classification probabilities.
+
+The inputs for the model trained on the Raw Amplitude dataset are appropriately shaped for the model to train on (44,100 $\times$ 1). Since the inputs from the Mel Spectogram dataset are 2D, we flatten them to allow for faster training.
 
 \subsection{Results}
 
-This section should report on the following questions: 
-
-\begin{itemize}
-\item  What is the \textbf{overall} and \textbf{per-class} classification accuracy of the models that you implemented?
-\end{itemize}
+See Table 1 in the Tables section for class-specific accuracies. Our Raw Amplitude model performs with overall test accuracy of $17.89\%$, while Mel Spectogram model performs with overall $36.69\%$. Train accuracy for both models is very high, and about the same ($\approx 97.5$.)
 
 \subsection{Discussion}
 
-This section should report on the following questions: 
+There are several possible reasons why the baselines might be performing poorly. On one hand, some of the specific classes constitute a small proportion of the training data, which might not be sufficient for the model to learn that classes distinguishing features well. For example, \texttt{Car Horn} and \texttt{Gun Shot}, which make up $3.54\%$ and $1.49\%$ of the test data respectively, have particularly low scores (with \texttt{Car Horn} scoring 0.)
 
-\begin{itemize}
-  \item Why do you hypothesize one feature representation performed better than the other?  
-  \item Do you have an intuition for why these baselines might be performing as well/poorly as they are?
-  \end{itemize}
+On the other hand, it could be the case that our linear Logistic Regression doesn't capture the trends accurately. For example, some of the classes might be related in a more complicated, non-linear way (for example, dogs barking might be correlated to children playing.)
 
-\section{Part B: More Modeling}
+The Mel Spectogram's higher performance is likely due to the greater richness of the feature representation. It contains more data than Raw Amplitude dataset, and more so, the data is not just the amplitude, but captures the different frequencies that make up the sounds. 
+
+\section{Part B: More Modeling -- Random Forest and K-Nearest Neighbours}
 
 \subsection{First Step}
 
@@ -127,30 +105,84 @@ Why do you expect the tuned models to perform better than the baseline models an
 Include your paragraph reflections on the key components listed in the instructions.
 
 
-\section{Optional Exploration, Part C: Explore some more!}
-\subsection{Approach}
+\newpage
+\section{Tables}
 
-What did you do? Credit will be given for:
-  \begin{itemize}
-  \item Diving deeply into all of the model classes and/or pre-processing algorithms that you tried (rather than just trying off-the-shelf tools with default settings).  When relevant, provide mathematical descriptions or pseudocode to help us understand how the models you tried make predictions and are trained. 
-  \end{itemize}
-  
+\listoftables
+\vspace{5pt}
 
-\subsection{Results}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table for Baseline Model Accuracy (Raw & Mel)       
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[h!]
+\centering
+\begin{tabular}{lllll}
+                 & \multicolumn{2}{l}{Test Accuracy (\%)} & \multicolumn{2}{l}{Train Accuracy (\%)} \\ \toprule
+Model            & Raw Amp           & Mel Spect          & Raw Amp           & Mel Spect           \\ \toprule
+Overall Accuracy & 17.89             & 36.69              & 97.73             & 97.55               \\ \midrule
+Air Conditioner  & 28.67             & 28.67              & 99.29             & 97.71               \\
+Car Horn         & 0.00              & 33.33              & 98.98             & 98.98               \\
+Children Playing & 34.45             & 23.08              & 98.13             & 95.98               \\
+Dog Bark         & 12.23             & 19.21              & 95.03             & 94.46               \\
+Drilling         & 1.14              & 45.83              & 99.01             & 98.85               \\
+Engine Idling    & 30.68             & 40.53              & 97.64             & 95.98               \\
+Gun Shot         & 6.67              & 70.00              & 97.59             & 100.00              \\
+Jackhammer       & 4.24              & 46.19              & 99.54             & 99.54               \\
+Siren            & 13.98             & 70.34              & 94.16             & 99.55               \\
+Street Music     & 15.67             & 23.33              & 98.14             & 97.29               \\ \bottomrule
+\end{tabular}
+\caption{\label{tab:1} Baseline model accuracy on Raw Amplitude \& Mel Spectogram data}
+\end{table}
 
-Describe your results in a way that is appropriate for the experiments that you ran.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table for Vanilla RFF Model Accuracy (Raw & Mel)    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Discussion}
-Credit will be given for:
+\begin{table}[h!]
+\centering
+\begin{tabular}{lllll}
+& \multicolumn{2}{l}{Test Accuracy (\%)} & \multicolumn{2}{l}{Train Accuracy (\%)} \\ \toprule
+Model            & RF Raw Amp        & RF Mel Spect       & RF Raw Amp        & RF Mel Spect        \\ \toprule
+Overall Accuracy & 24.62             & 49.20              & 100.00            & 100.00              \\ \midrule
+Air Conditioner  & 15.33             & 36.00              & 100.00            & 100.00              \\
+Car Horn         & 0.00              & 25.64              & 100.00            & 100.00              \\
+Children Playing & 54.18             & 55.85              & 100.00            & 100.00              \\
+Dog Bark         & 29.26             & 44.54              & 100.00            & 100.00              \\
+Drilling         & 19.32             & 59.09              & 100.00            & 100.00              \\
+Engine Idling    & 36.74             & 43.18              & 100.00            & 100.00              \\
+Gun Shot         & 0.00              & 43.33              & 100.00            & 100.00              \\
+Jackhammer       & 27.97             & 47.03              & 100.00            & 100.00              \\
+Siren            & 8.05              & 61.86              & 100.00            & 100.00              \\
+Street Music     & 11.00             & 51.33              & 100.00            & 100.00              \\ \bottomrule
+\end{tabular}
 
-  \begin{itemize}
-  \item Explaining the your reasoning for why you sequentially chose to
-    try the approaches you did (i.e. what was it about your initial
-    approach that made you try the next change?).  
-  \item Explaining the results.  Did the adaptations you tried improve
-    the results?  \textbf{Why or why not?}  Did you do additional tests to
-    determine if your reasoning was correct?  
-  \end{itemize}
- 
+\caption{\label{tab:2} Vanilla RFF Performance on Raw Amplitude \& Mel Spectogram data}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table for Vanilla KNN Model Accuracy (Raw & Mel)    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lllll}
+                 & \multicolumn{2}{l}{Test Accuracy (\%)} & \multicolumn{2}{l}{Train Accuracy (\%)} \\ \toprule
+Model            & KNN Raw Amp       & KNN Mel Spect      & KNN Raw Amp       & KNN Mel Spect       \\ \toprule
+Overall Accuracy & 17.84             & 26.90              & 27.30             & 59.54               \\ \midrule
+Air Conditioner  & 27.00             & 16.67              & 41.43             & 78.29               \\
+Car Horn         & 0.00              & 38.46              & 8.12              & 50.25               \\
+Children Playing & 16.05             & 24.08              & 37.07             & 46.84               \\
+Dog Bark         & 10.92             & 16.59              & 30.02             & 41.11               \\
+Drilling         & 0.00              & 31.44              & 0.66              & 67.22               \\
+Engine Idling    & 14.77             & 32.95              & 28.85             & 87.93               \\
+Gun Shot         & 3.33              & 53.33              & 9.64              & 66.27               \\
+Jackhammer       & 0.00              & 63.56              & 0.30              & 82.37               \\
+Siren            & 80.93             & 26.27              & 75.15             & 49.55               \\
+Street Music     & 2.33              & 6.00               & 10.14             & 21.14               \\ \bottomrule
+\end{tabular}
+
+\caption{\label{tab:3} Vanilla KNN Performance on Raw Amplitude \& Mel Spectogram data}
+\end{table}
+
 
 \end{document}
